@@ -1,6 +1,6 @@
 # create table
 
-
+# Import the boto3 library
 import boto3
 
 dynamodb = boto3.client('dynamodb')

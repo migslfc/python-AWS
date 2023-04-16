@@ -9,15 +9,17 @@ dynamodb = boto3.client('dynamodb')
 # Select the table to be queried
 table_name = 'week14Project-Python'
 
-# Execute scan with filter expression
-response = dynamodb.scan(
+# Execute query with filter expression
+response = dynamodb.query(
     TableName=table_name,
-    FilterExpression='#a >= :salary',
+    KeyConditionExpression='#a = :salary and #b > :val',
     ExpressionAttributeNames={
         '#a': 'avg-salary',  # attribute to filter on
+        '#b': 'profession'  # partition key
     },
     ExpressionAttributeValues={
         ':salary': {'N': '100000'},  # minimum salary threshold
+        ':val': {'S': ''}
     },
 )
 

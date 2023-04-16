@@ -1,8 +1,12 @@
 # week14 Project Foundational - gist starting point add items
 
-# Importing the Boto3 library
+# Import the boto3 library
 
 import boto3
+
+# create a DynamoDB client
+dynamodb = boto3.client('dynamodb', region_name='us-east-1')
+
 
 # Creating a list of dictionaries, each of which contains the attributes and values for a new item to be added to the table
 
@@ -72,7 +76,7 @@ for item in items:
     response = dynamodb.put_item(
         Item=item,
         ReturnConsumedCapacity='TOTAL',
-        TableName='week14Project-Python',
+        TableName='week14Project-Python-foundational',
     )
     
     # Printing a message to indicate that the item has been added
