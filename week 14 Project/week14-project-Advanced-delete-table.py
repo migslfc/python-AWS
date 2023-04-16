@@ -3,17 +3,15 @@
 # Import the boto3 library
 import boto3
 
-# Initialize a DynamoDB resource
-dynamodb = boto3.resource('dynamodb')
+# Create a DynamoDB client
+dynamodb = boto3.client('dynamodb')
 
-# Specify the name of the table to delete
+# Specify the table name
 table_name = 'python-outside-tech'
 
-# Get the table by name
-table = dynamodb.Table(table_name)
+# Delete the table with the specified name
+response = dynamodb.delete_table(TableName=table_name)
 
-# Delete the table
-table.delete()
-
-# Print a success message
-print(f'Table {table_name} deleted successfully.')
+# Print a success message if the table was deleted
+if response['TableDescription']['TableStatus'] == 'DELETING':
+    print(f'Table {table_name} deleted successfully.')

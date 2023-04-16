@@ -1,6 +1,6 @@
 # dynamodb from Zaire
 
-
+# Import the boto3 library
 import boto3
 
 # replace the keys below
