@@ -1,0 +1,47 @@
+# Import the necessary modules.
+import datetime
+from dateutil.parser import parse
+import boto3
+
+# Define a function to calculate the number of days between two dates.
+def days_old(date):
+    parsed = parse(date).replace(tzinfo=None)
+    diff = datetime.datetime.now() - parsed
+    return diff.days
+
+# Define the Lambda function.
+def lambda_handler(event, context):
+
+    # Create an EC2 client object and get a list of all regions.
+    ec2_client = boto3.client('ec2')
+    regions = [region['RegionName']
+               for region in ec2_client.describe_regions()['Regions']]
+
+    # Loop through all regions.
+    for region in regions:
+        
+        # Create an EC2 client object for the region and print the name of the region.
+        ec2 = boto3.client('ec2', region_name=region)
+        print("Region:", region)
+
+        # Get a list of all AMIs owned by the current account in the region.
+        amis = ec2.describe_images(Owners=['self'])['Images']
+
+        # Loop through all AMIs in the region.
+        for ami in amis:
+            
+            # Get the creation date of the AMI and calculate its age in days.
+            creation_date = ami['CreationDate']
+            age_days = days_old(creation_date)
+            image_id = ami['ImageId']
+            
+            # Print the ID, creation date, and age of the AMI.
+            print('ImageId: {}, CreationDate: {} ({} days old)'.format(
+                image_id, creation_date, age_days))
+
+            # If the AMI is more than two days old, delete it.
+            if age_days >= 2:
+                print('Deleting ImageId:', image_id)
+
+                # Deregister the AMI.
+                ec2.deregister_image(ImageId=image_id)
