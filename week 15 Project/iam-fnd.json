@@ -1,0 +1,26 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "sqs:SendMessage",
+                "sqs:ReceiveMessage",
+                "sqs:DeleteMessage"
+            ],
+            "Resource": "arn:aws:sqs:us-east-1:922020626481:week15-sqs"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "lambda:InvokeFunction"
+            ],
+            "Resource": "arn:aws:lambda:us-east-1:922020626481:function:week15-lambda-foundational",
+            "Condition": {
+                "ArnLike": {
+                    "AWS:SourceArn": "arn:aws:execute-api:us-east-1:922020626481:nba81cstg1/*"
+                }
+            }
+        }
+    ]
+}
